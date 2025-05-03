@@ -38,6 +38,14 @@
             /* Evita deformaciones */
         }
 
+        .info-box {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            text-align: center;
+        }
+
         .price {
             font-size: 1rem;
             font-weight: bold;
@@ -117,17 +125,19 @@
             /* Color del borde cambia al pasar el mouse */
         }
     </style>
-
 </head>
 
 <body>
     <div class="container catalog-container">
         <h1 class="mb-4">Catálogo de Joyería</h1>
-        <p>El precio de cada uno es de <strong>$5.000 pesos</strong>. Entregas en Quilpué.</p>
-        <p>Contáctame para pedirlos:</p>
-        <a href="https://wa.me/56949378439" target="_blank" class="btn btn-success"
-            style="font-size: 20px; padding: 12px 30px; margin-bottom: 30px;">📲 Hablar por WhatsApp</a>
-    <div class="row row-cols-1 row-cols-md-4 g-4">
+        <div class="info-box p-4 mb-4">
+            <p>El precio de cada uno es de <strong>$5.000 pesos</strong>. Entregas en Quilpué.</p>
+            <p>Contáctame para pedirlos:</p>
+            <a href="https://wa.me/56949378439" target="_blank" class="btn btn-success"
+                style="font-size: 20px; padding: 12px 30px;">📲 Hablar por WhatsApp</a>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-4 g-4">
             <!-- Producto 1 -->
             <div class="col">
                 <div class="product-card p-3" style="position: relative;">
@@ -436,18 +446,17 @@
             </div>
         </div>
     </div> <!-- Fin del row -->
-        <script>
+    <script>
 
-            function contactar(producto) {
-                let mensaje = `Hola, estoy interesado en comprar: ${producto}. ¿Está disponible?`;
-                let whatsappURL = `https://wa.me/56949378439?text=${encodeURIComponent(mensaje)}`;
-                window.open(whatsappURL, "_blank");
-            }
-        </script>
+        function contactar(producto) {
+            let mensaje = `Hola, estoy interesado en comprar: ${producto}. ¿Está disponible?`;
+            let whatsappURL = `https://wa.me/56949378439?text=${encodeURIComponent(mensaje)}`;
+            window.open(whatsappURL, "_blank");
+        }
+    </script>
 
-        <a href="https://tarotvia.cl" class="btn btn-secondary">Ir a mi Sitio de Tarot</a>
-        <a href="https://rommy.netlify.app" class="btn btn-secondary">Ir a mi Sitio para Practicar Inglés</a>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <a href="../index.html" class="btn secondary">Ir a mi Sitio</a>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
