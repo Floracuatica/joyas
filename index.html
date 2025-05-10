@@ -4,461 +4,994 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta property="og:title" content="Catálogo de Joyas Sonia">
-    <meta property="og:description" content="Descubre nuestras joyas delicadas y hermosas. ¡Entrega en Quilpué!">
-    <meta property="og:image" content="https://joyassonia.netlify.app/img/joyasonia.png">
-    <meta property="og:url" content="https://joyassonia.netlify.app">
-    <meta name="twitter:card" content="summary_large_image">
-    <title>Catálogo de Joyería</title>
+    <title>Catálogo - Joyas Sonia</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #f5f5f5;
-            text-align: center;
+            background-color: #fff8f7;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
         }
 
-        .catalog-container {
-            padding: 30px;
-        }
-
-        .product-card:hover {
-            transform: scale(1.05);
-        }
-
-        .product-card {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            height: 100%;
-            /* Hace que todas las tarjetas tengan la misma altura */
-        }
-
-        .product-image {
-            width: 100%;
-            height: auto;
-            max-height: 240px;
-            /* Asegura que todas las imágenes tengan un tamaño similar */
-            object-fit: cover;
-            /* Evita deformaciones */
+        .sidebar {
+            background-color: #f8f1f7;
+            border-right: 2px solid #b48ead;
+            width: 220px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding: 40px 10px;
         }
 
         .info-box {
             background-color: white;
             border-radius: 12px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            display: inline-block;
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            padding-top: 60px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 80vh;
+            border-radius: 12px;
+            box-shadow: 0 0 20px #fff;
+        }
+
+        .close {
+            position: absolute;
+            top: 30px;
+            right: 35px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .sidebar button {
+            display: block;
+            width: 100%;
+            margin-bottom: 15px;
+            background-color: #e9dbe6;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            font-weight: bold;
+            color: #4a4a4a;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .sidebar button:hover {
+            background-color: #d9c5d6;
+        }
+
+        .main {
+            margin-left: 240px;
+            padding: 40px 20px;
             text-align: center;
         }
 
-        .price {
-            font-size: 1rem;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 10px 15px;
-            background-color: #6c757d;
-            /* Color gris de Bootstrap 'secondary' */
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-
-        .btn:hover {
-            background-color: #5a6268;
-            /* Un poco más oscuro al pasar el mouse */
-        }
-
         h1 {
-            color: white;
-            /* Letra blanca */
-            font-weight: bold;
-            /* Más gruesa */
-            text-shadow: 10px 10px 10px rgba(0, 0, 0, 0.7);
-            /* Sombra negra difuminada */
+            color: #b48ead;
+            margin-bottom: 30px;
         }
 
-        h3 {
-            color: rgb(245, 240, 243);
-            /* Letra blanca */
-            font-weight: 600;
-            /* Texto más grueso */
-            text-shadow: 3px 3px 6px rgba(0, 0, 0, 1);
-            /* Sombra fuerte negra */
+        .content-section {
+            display: none;
             font-size: 18px;
-
+            max-width: 700px;
+            margin: 0 auto;
+            color: #4a4a4a;
         }
 
-
-
-        body {
-            background-image: url('img/fondojoyeria.png');
-            /* Asegúrate de que la ruta es correcta */
-            background-size: cover;
-            /* Ajusta para que cubra toda la pantalla */
-            background-position: center;
-            /* Centra la imagen */
-            background-repeat: no-repeat;
-            /* Evita que la imagen se repita */
-            background-attachment: fixed;
-            /* Fija la imagen al hacer scroll */
+        .active-section {
+            display: block;
         }
 
-        .product-card {
-            background: rgba(255, 255, 255, 0.7);
-            /* Fondo semi-transparente para mejor contraste */
-            border: 2px solid #b48ead;
-            /* Marco elegante en tono lila/dorado */
-            border-radius: 10px;
-            /* Bordes redondeados */
-            padding: 15px;
-            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
-            /* Sombra suave */
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            /* Animación al pasar el mouse */
+        .product-description {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.75);
+            color: white;
+            padding: 10px;
+            font-size: 14px;
+            opacity: 0;
+            transform: translateY(100%);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            pointer-events: none;
+        }
+
+        .product-card:hover .product-description {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .product-card:hover {
             transform: scale(1.05);
-            /* Aumenta ligeramente el tamaño */
-            box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.3);
-            /* Más sombra para efecto flotante */
-            border-color: #8d6f9f;
-            /* Color del borde cambia al pasar el mouse */
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+
+        .product-image {
+            width: 100%;
+            height: 180px;
+            /* antes era 240px */
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 20px 10px;
+                border-right: none;
+                border-bottom: 2px solid #b48ead;
+            }
+
+            .sidebar button {
+                width: 90%;
+                margin: 5px 0;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 20px 15px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="container catalog-container">
-        <h1 class="mb-4">Catálogo de Joyería</h1>
-        <div class="info-box p-4 mb-4">
-            <p>El precio de cada uno es de <strong>$5.000 pesos</strong>. Entregas en Quilpué.</p>
-            <p>Contáctame para pedirlos:</p>
-            <a href="https://wa.me/56949378439" target="_blank" class="btn btn-success"
-                style="font-size: 20px; padding: 12px 30px;">📲 Hablar por WhatsApp</a>
+
+    <div class="sidebar">
+        <button onclick="showSection('inicio')">Inicio</button>
+        <button onclick="showSection('aboutus')">Sobre Nosotras</button>
+        <button onclick="showSection('collares')">Collares</button>
+        <button onclick="showSection('anillos')">Anillos</button>
+        <button onclick="showSection('pulseras')">Pulseras</button>
+        <button onclick="showSection('aritos')">Aritos</button>
+        <button onclick="showSection('contacto')">Contáctanos</button>
+    </div>
+
+    <div class="main">
+        <div id="inicio" class="content-section inicio-section active-section">
+            Bienvenida a Joyas Sonia 💖
+            <p>Puedes hacer clic en cada imagen para verlas con más detalle o solo mantener presionado tu dedo para que
+                aparezca una descripción leve</p>
+            <a href="#pulseras" onclick="showSection('pulseras')">
+                <img src="img/pulseras.jpg" alt="Ver pulseras"
+                    style="width: 100%; border-radius: 12px; margin-top: 30px; cursor: pointer;">
+            </a>
         </div>
 
-        <div class="row row-cols-1 row-cols-md-4 g-4">
-            <!-- Producto 1 -->
-            <div class="col">
-                <div class="product-card p-3" style="position: relative;">
-                    <div class="badge-number">🐱 #1</div>
-                    <img src="img/1.jpg" class="product-image" alt="Aros 1">
-                    <h5 class="mt-2">Aros Argollas Doradas</h5>
+        <div id="aboutus" class="content-section">
+            <div class="row justify-content-center"><img src="img/joyasonia.png" alt="Logo Joyas Sonia" class="logo">
+
+                <h1>Sobre Joyas Sonia</h1>
+                <p>En <strong>Joyas Sonia</strong> buscamos las joyas más bellas para que tú las recibas, las luzcas y
+                    te
+                    veas como realmente mereces: radiante, auténtica y única. Cada pieza es elegida con cariño y pensada
+                    para acompañarte en tu día a día o en tus momentos especiales.</p>
+            </div>
+
+        </div>
+
+        <div id="collares" class="content-section">
+            <p>🌸 Aquí verás nuestros collares más delicados y encantadores.</p>
+            <div class="row justify-content-center productos-collares">
+                <!-- Producto 1 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🌸 #1</div>
+                        <img src="img/6.jpg" class="product-image" alt="Collares 1" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Collar Trébol Brillante</h5>
+                        <div class="product-description">Mide.</div>
+                    </div>
+                </div>
+                <!-- Producto 2 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🌸 #2</div>
+                        <img src="img/15.jpg" class="product-image" alt="Collares 2" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Collar de Corazón</h5>
+                        <div class="product-description">Mide.</div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🌸 #3</div>
+                        <img src="img/32.jpg" class="product-image" alt=" Collares 3" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Collar Mickey</h5>
+                        <div class="product-description">Mide.</div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🌸 #4</div>
+                        <img src="img/43.jpg" class="product-image" alt="Collares 4" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Collar Halagueño</h5>
+                        <div class="product-description">Mide</div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🌸 #5</div>
+                        <img src="img/44.jpg" class="product-image" alt="Collares 5" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Collar de las Hadas</h5>
+                        <div class="product-description">Mide</div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🌸 #6</div>
+                        <img src="img/45.jpg" class="product-image" alt="Collares 6" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Collar White Tulip</h5>
+                        <div class="product-description">Mide.</div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🌸 #7</div>
+                        <img src="img/47.jpg" class="product-image" alt="Collares 7" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Collar Flor de Loto</h5>
+                        <div class="product-description">Mide.</div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🌸 #8</div>
+                        <img src="img/53.jpg" class="product-image" alt="Collares 8" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Collar Marino</h5>
+                        <div class="product-description">Mide.</div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🌸 #9</div>
+                        <img src="img/38.jpg" class="product-image" alt="Collares 9" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Collar Rueda de la Fortuna</h5>
+                        <div class="product-description">Mide.</div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🌸 #10</div>
+                        <img src="img/41.jpg" class="product-image" alt="Collares 10" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Collar Lilly Tulip 3D</h5>
+                        <div class="product-description">Mide.</div>
+                    </div>
+                </div>
+            </div>
+            <div id="pagination-collares" class="mt-4 text-center"></div>
+        </div>
+
+        <div id="anillos" class="content-section">
+            <p>💍 Anillos hermosos que destacan tu estilo único.</p>
+
+            <div class="row justify-content-center productos-anillos">
+                <!-- Producto 1 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">💍 #1</div>
+                        <img src="img/50.jpg" class="product-image" alt="Anillos 1" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Anillo Flor de Loto</h5>
+                        <div class="product-description">Talla 10, es talla espaciosa.</div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Producto 2 -->
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #2</div>
-                    <img src="img/2.jpg" class="product-image" alt="Aros 2">
-                    <h5 class="mt-2">Aros Mariposa Verde</h5>
-                </div>
-            </div>
-            <!-- Producto 3 -->
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #3</div>
-                    <img src="img/3.jpg" class="product-image" alt="Aros 3">
-                    <h5 class="mt-2">Aros Mariposa Roja</h5>
-                </div>
-            </div>
-            <!-- Producto 4 -->
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #4</div>
-                    <img src="img/4.jpg" class="product-image" alt="Aros 4">
-                    <h5 class="mt-2">Aros Lunita</h5>
-                </div>
-            </div>
-            <!-- Producto 5 -->
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #5</div>
-                    <img src="img/5.jpg" class="product-image" alt="Aros 5">
-                    <h5 class="mt-2">Aros de Arcoiris</h5>
-                </div>
-            </div>
-            <!-- Producto 6 -->
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #6</div>
-                    <img src="img/6.jpg" class="product-image" alt="Aros 6">
-                    <h5 class="mt-2">Collar Trébol Brillante</h5>
-                </div>
-            </div>
+            <div id="pagination-anillos" class="mt-4 text-center"></div>
+        </div>
 
-            <!-- Producto 7 -->
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #7</div>
-                    <img src="img/7.jpg" class="product-image" alt="Aros 7">
-                    <h5 class="mt-2">Aros Cintillo Verde</h5>
+
+        <div id="pulseras" class="content-section">
+            <p>✨ Pulseras con detalles finos para cada ocasión.</p>
+            <div class="row justify-content-center productos-pulseras">
+                <!-- Producto 1 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">✨ #1</div>
+                        <img src="img/46.jpg" class="product-image" alt="Pulseras 1" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Pulsera tus Estrellas</h5>
+                        <div class="product-description">Pulsera de tantos cms de largo.
+                        </div>
+                    </div>
+                </div>
+                <!-- Producto 2 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">✨ #2</div>
+                        <img src="img/57.jpg" class="product-image" alt="Pulseras 2" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Pulsera Corazón</h5>
+                        <div class="product-description">Pulsera de tantos cms de largo.
+                        </div>
+                    </div>
+                </div>
+                <!-- Producto 3 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">✨ #3</div>
+                        <img src="img/49.jpg" class="product-image" alt="Pulseras 3" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Pulsera Ojito</h5>
+                        <div class="product-description">Pulsera de tantos cms de largo.
+                        </div>
+                    </div>
+                </div>
+                <!-- Producto 4 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">✨ #4</div>
+                        <img src="img/59.jpg" class="product-image" alt="Pulseras 4" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Pulsera Rosal Negro</h5>
+                        <div class="product-description">Pulsera de tantos cms de largo.
+                        </div>
+                    </div>
+                </div>
+                <!-- Producto 5 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">✨ #5</div>
+                        <img src="img/54.jpg" class="product-image" alt="Pulseras 5" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Pulsera Triple Diosa</h5>
+                        <div class="product-description">Pulsera de tantos cms de largo.
+                        </div>
+                    </div>
+                </div>
+                <!-- Producto 6 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">✨ #6</div>
+                        <img src="img/56.jpg" class="product-image" alt="Pulseras 6" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Brazalete Afrodita</h5>
+                        <div class="product-description">Pulsera de tantos cms de largo.
+                        </div>
+                    </div>
+                </div>
+                <!-- Producto 7 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">✨ #7</div>
+                        <img src="img/58.jpg" class="product-image" alt="Pulseras 7" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Brazalete Pequeña Enredadera</h5>
+                        <div class="product-description">Pulsera de tantos cms de largo.
+                        </div>
+                    </div>
+                </div>
+                <!-- Producto 8 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">✨ #8</div>
+                        <img src="img/55.jpg" class="product-image" alt="Pulseras 8" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Pulsera de Brillantes</h5>
+                        <div class="product-description">Pulsera de tantos cms de largo.
+                        </div>
+                    </div>
+                </div>
+                <!-- Producto 9 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">✨ #9</div>
+                        <img src="img/40.jpg" class="product-image" alt="Pulseras 9" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Pulsera Átomo Rosa</h5>
+                        <div class="product-description">Pulsera de tantos cms de largo.
+                        </div>
+                    </div>
+                </div>
+                <!-- Producto 10 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">✨ #10</div>
+                        <img src="img/39.jpg" class="product-image" alt="Pulseras 10" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Pulsera Átomo Dorada</h5>
+                        <div class="product-description">Pulsera de tantos cms de largo.
+                        </div>
+                    </div>
+                </div>
+                <!-- Producto 11 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">✨ #11</div>
+                        <img src="img/48.jpg" class="product-image" alt="Pulseras 11" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Pulsera Unión</h5>
+                        <div class="product-description">Pulsera de tantos cms de largo.
+                        </div>
+                    </div>
                 </div>
             </div>
+            <div id="pagination-pulseras" class="mt-4 text-center"></div>
+        </div>
+        <div id="aritos" class="content-section">
+            <p>👂 Aritos de acero inoxidable que brillan contigo.</p>
 
-            <!-- Producto 8 -->
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #8</div>
-                    <img src="img/8.jpg" class="product-image" alt="Aros 8">
-                    <h5 class="mt-2">Aros Oro Verdes</h5>
+            <div class="row justify-content-center productos-aritos">
+                <!-- Producto 1 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #1</div>
+                        <img src="img/1.jpg" class="product-image" alt="Aros 1" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros Argollas Doradas</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Producto 9 -->
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #9</div>
-                    <img src="img/9.jpg" class="product-image" alt="Aros 9">
-                    <h5 class="mt-2">Aros Corazón Rosita</h5>
+                <!-- Producto 2 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #2</div>
+                        <img src="img/2.jpg" class="product-image" alt="Aros 2" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros Mariposa Verde</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Producto 10 -->
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #10</div>
-                    <img src="img/10.jpg" class="product-image" alt="Aros 10">
-                    <h5 class="mt-2">Aros Corazón Rojo</h5>
+                <!-- Producto 3 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #3</div>
+                        <img src="img/3.jpg" class="product-image" alt="Aros 3" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros Mariposa Roja</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Producto 11 -->
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #11</div>
-                    <img src="img/11.jpg" class="product-image" alt="Aros 11">
-                    <h5 class="mt-2">Aros Corazón Blanco Puro</h5>
+                <!-- Producto 4 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #4</div>
+                        <img src="img/4.jpg" class="product-image" alt="Aros 4" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros Lunita</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Producto 12 -->
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #12</div>
-                    <img src="img/12.jpg" class="product-image" alt="Aros 12">
-                    <h5 class="mt-2">Aros Corazón Rosa</h5>
+                <!-- Producto 5 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #5</div>
+                        <img src="img/5.jpg" class="product-image" alt="Aros 5" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros de Arcoiris</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Producto 13 -->
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #13</div>
-                    <img src="img/13.jpg" class="product-image" alt="Aros 13">
-                    <h5 class="mt-2">Aros Átomo Brillante</h5>
+                <!-- Producto 6 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #6</div>
+                        <img src="img/7.jpg" class="product-image" alt="Aros 6" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros Cintillo Verde</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Producto 14 -->
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #14</div>
-                    <img src="img/14.jpg" class="product-image" alt="Aros 14">
-                    <h5 class="mt-2">Aros Trenzados</h5>
+                <!-- Producto 7 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #7</div>
+                        <img src="img/8.jpg" class="product-image" alt="Aros 7" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros Oro Verdes</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Producto 15 -->
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #15</div>
-                    <img src="img/15.jpg" class="product-image" alt="Aros 15">
-                    <h5 class="mt-2">Collar de Corazón</h5>
+                <!-- Producto 8 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #8</div>
+                        <img src="img/9.jpg" class="product-image" alt="Aros 8" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros Corazón Rosita</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #16</div>
-                    <img src="img/16.jpg" class="product-image" alt="Aros 16">
-                    <h5 class="mt-2">Aros brillo lunar</h5>
+                <!-- Producto 9 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #9</div>
+                        <img src="img/10.jpg" class="product-image" alt="Aros 9" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros Corazón Rojo</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #17</div>
-                    <img src="img/17.jpg" class="product-image" alt="Aros 17">
-                    <h5 class="mt-2">Aros que Resaltan</h5>
+                <!-- Producto 10 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #10</div>
+                        <img src="img/11.jpg" class="product-image" alt="Aros 10" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros Corazón Blanco Puro</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #18</div>
-                    <img src="img/18.jpg" class="product-image" alt="Aros 18">
-                    <h5 class="mt-2">Aros Asteroides</h5>
+                <!-- Producto 11 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #11</div>
+                        <img src="img/12.jpg" class="product-image" alt="Aros 11" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros Corazón Rosa</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #19</div>
-                    <img src="img/19.jpg" class="product-image" alt="Aros 19">
-                    <h5 class="mt-2">Aros Destino</h5>
+                <!-- Producto 12 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #12</div>
+                        <img src="img/13.jpg" class="product-image" alt="Aros 12" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros Átomo Brillante</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #20</div>
-                    <img src="img/20.jpg" class="product-image" alt="Aros 20">
-                    <h5 class="mt-2">Aros Fiesta</h5>
+                <!-- Producto 13 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #13</div>
+                        <img src="img/14.jpg" class="product-image" alt="Aros 13" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros Trenzados</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #21</div>
-                    <img src="img/21.jpg" class="product-image" alt="Aros 21">
-                    <h5 class="mt-2">Aros Perlados</h5>
+                <!-- Producto 14 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #14</div>
+                        <img src="img/23.jpg" class="product-image" alt="Aros 14" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros Cielo y Brillo</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #22</div>
-                    <img src="img/22.jpg" class="product-image" alt="Aros 22">
-                    <h5 class="mt-2">Aros Celeste</h5>
+                <!-- Producto 15 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #15</div>
+                        <img src="img/24.jpg" class="product-image" alt="Aros 15" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros Corazón y Brillo</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #23</div>
-                    <img src="img/23.jpg" class="product-image" alt="Aros 23">
-                    <h5 class="mt-2">Aros Cielo y Brillo</h5>
+                <!-- Producto 16 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #16</div>
+                        <img src="img/25.jpg" class="product-image" alt="Aros 16" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros Blanca Ilusión</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #24</div>
-                    <img src="img/24.jpg" class="product-image" alt="Aros 24">
-                    <h5 class="mt-2">Aros Corazón y Brillo</h5>
+                <!-- Producto 17 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #17</div>
+                        <img src="img/26.jpg" class="product-image" alt="Aros 17" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros Coquetos</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #25</div>
-                    <img src="img/25.jpg" class="product-image" alt="Aros 25">
-                    <h5 class="mt-2">Aros Blanca Ilusión</h5>
+                <!-- Producto 18 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #18</div>
+                        <img src="img/27.jpg" class="product-image" alt="Aros 18" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros de Corazón</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #26</div>
-                    <img src="img/26.jpg" class="product-image" alt="Aros 26">
-                    <h5 class="mt-2">Aros Coquetos</h5>
+                <!-- Producto 19 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #19</div>
+                        <img src="img/28.jpg" class="product-image" alt="Aros 19" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros Piedrita Celeste</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #27</div>
-                    <img src="img/27.jpg" class="product-image" alt="Aros 27">
-                    <h5 class="mt-2">Aros de Corazón</h5>
+                <!-- Producto 20 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #20</div>
+                        <img src="img/29.jpg" class="product-image" alt="Aros 20" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros Florales</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #28</div>
-                    <img src="img/28.jpg" class="product-image" alt="Aros 28">
-                    <h5 class="mt-2">Aros Piedrita Celeste</h5>
+                <!-- Producto 21 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #21</div>
+                        <img src="img/30.jpg" class="product-image" alt="Aros 21" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros Tres Corazones</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #29</div>
-                    <img src="img/29.jpg" class="product-image" alt="Aros 29">
-                    <h5 class="mt-2">Aros Florales</h5>
+                <!-- Producto 22 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #22</div>
+                        <img src="img/31.jpg" class="product-image" alt="Aros 22" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros Mickey</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #30</div>
-                    <img src="img/30.jpg" class="product-image" alt="Aros 30">
-                    <h5 class="mt-2">Aros Tres Corazones</h5>
+                <!-- Producto 23 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #23</div>
+                        <img src="img/16.jpg" class="product-image" alt="Aros 23" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros brillo lunar</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #31</div>
-                    <img src="img/31.jpg" class="product-image" alt="Aros 31">
-                    <h5 class="mt-2">Aros Mickey</h5>
+                <!-- Producto 24 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #24</div>
+                        <img src="img/17.jpg" class="product-image" alt="Aros 24" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros que Resaltan</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #32</div>
-                    <img src="img/32.jpg" class="product-image" alt="Aros 32">
-                    <h5 class="mt-2">Collar Mickey</h5>
+                <!-- Producto 25 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #25</div>
+                        <img src="img/18.jpg" class="product-image" alt="Aros 25" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros Asteroides</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #33</div>
-                    <img src="img/33.jpg" class="product-image" alt="Aros 33">
-                    <h5 class="mt-2">Aros de Naturaleza</h5>
+                <!-- Producto 26 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #26</div>
+                        <img src="img/19.jpg" class="product-image" alt="Aros 26" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros Destino</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #34</div>
-                    <img src="img/34.jpg" class="product-image" alt="Aros 34">
-                    <h5 class="mt-2">Aros Azul Nacarado</h5>
+                <!-- Producto 27 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #27</div>
+                        <img src="img/20.jpg" class="product-image" alt="Aros 27" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros Fiesta</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #35</div>
-                    <img src="img/35.jpg" class="product-image" alt="Aros 35">
-                    <h5 class="mt-2">Aros del Océano</h5>
+                <!-- Producto 28 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #28</div>
+                        <img src="img/21.jpg" class="product-image" alt="Aros 28" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros Perlados</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #36</div>
-                    <img src="img/36.jpg" class="product-image" alt="Aros 36">
-                    <h5 class="mt-2">Argollas ondeadas</h5>
+                <!-- Producto 29 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #29</div>
+                        <img src="img/22.jpg" class="product-image" alt="Aros 29" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros Celeste</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col">
-                <div class="product-card p-3">
-                    <div class="badge-number">🐱 #37</div>
-                    <img src="img/37.jpg" class="product-image" alt="Aros 37">
-                    <h5 class="mt-2">Aros Laureles</h5>
+                <!-- Producto 30 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #30</div>
+                        <img src="img/33.jpg" class="product-image" alt="Aros 30" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros de Naturaleza</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Producto 31 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #31</div>
+                        <img src="img/34.jpg" class="product-image" alt="Aros 31" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros Azul Nacarado</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Producto 32 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #32</div>
+                        <img src="img/35.jpg" class="product-image" alt="Aros 32" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros del Océano</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Producto 33 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #33</div>
+                        <img src="img/36.jpg" class="product-image" alt="Aros 33" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Argollas ondeadas</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Producto 34 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #34</div>
+                        <img src="img/37.jpg" class="product-image" alt="Aros 34" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros Laureles</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Producto 35 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #35</div>
+                        <img src="img/51.jpg" class="product-image" alt="Aros 35" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aros Estandarte</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Producto 36 -->
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="product-card p-3" style="position: relative;">
+                        <div class="badge-number">🐱 #36</div>
+                        <img src="img/52.jpg" class="product-image" alt="Aros 36" onclick="enlargeImage(this.src)"
+                            style="width: 100%; max-height: 240px; object-fit: cover;">
+                        <h5 class="mt-2">Aritos Lavanda</h5>
+                        <div class="product-description">Miden lxa.
+                        </div>
+                    </div>
+                </div>
+                <div id="pagination-aritos" class="mt-4 text-center"></div>
+            </div>
+        </div>
+
+        <div id="contacto" class="content-section">
+            <h1 style="margin-bottom: 20px;">Contáctanos</h1>
+            <div class="row justify-content-center">
+                <div class="info-box p-4 mb-4">
+                    <p>El precio de cada una de estas joyas de acero inoxidable es de <strong>$5.000
+                            pesos</strong>. Entregas en Quilpué.</p>
+                    <p>Contáctame para pedirlos:</p>
+                    <a href="https://wa.me/56949378439" target="_blank" class="btn btn-success"
+                        style="font-size: 20px; padding: 12px 30px;">📲 Hablar por WhatsApp</a>
                 </div>
             </div>
         </div>
-    </div> <!-- Fin del row -->
+    </div>
+
+
     <script>
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(el => {
+                el.classList.remove('active-section');
+            });
+            const section = document.getElementById(sectionId);
+            section.classList.add('active-section');
+
+            // Espera un momento y luego hace scroll hacia la sección
+            setTimeout(() => {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100); // un pequeño delay asegura que la sección esté visible
+        }
+
+        function setupPagination(sectionClass, pagContainerId, cardsPerPage = 6) {
+            const all = document.querySelectorAll(`.${sectionClass} .product-card`);
+            const container = document.querySelector(`.${sectionClass}`);
+            const pagination = document.getElementById(pagContainerId);
+            const pages = Math.ceil(all.length / cardsPerPage);
+            let page = 1;
+
+            function show() {
+                container.querySelectorAll('.col-md-4').forEach(el => el.style.display = 'none');
+                const start = (page - 1) * cardsPerPage;
+                const end = start + cardsPerPage;
+                const visibles = Array.from(all).slice(start, end);
+                visibles.forEach(card => {
+                    card.closest('.col-md-4').style.display = 'block';
+                });
+                renderButtons();
+            }
+
+            function renderButtons() {
+                pagination.innerHTML = '';
+                for (let i = 1; i <= pages; i++) {
+                    const btn = document.createElement('button'); btn.innerText = i;
+                    btn.className = 'btn btn-sm mx-1 ' + (i === page ? 'btn-dark' : 'btn-outline-dark'); btn.onclick = () => {
+                        page = i;
+                        show();
+                    };
+                    pagination.appendChild(btn);
+                }
+            }
+
+            show();
+        }
+
+        setupPagination("productos-aritos", "pagination-aritos");
+        setupPagination("productos-collares", "pagination-collares");
+        setupPagination("productos-anillos", "pagination-anillos");
+        setupPagination("productos-pulseras", "pagination-pulseras");
 
         function contactar(producto) {
             let mensaje = `Hola, estoy interesado en comprar: ${producto}. ¿Está disponible?`;
             let whatsappURL = `https://wa.me/56949378439?text=${encodeURIComponent(mensaje)}`;
             window.open(whatsappURL, "_blank");
         }
+
+        function enlargeImage(src) {
+            const modal = document.getElementById("imageModal");
+            const modalImg = document.getElementById("modalImg");
+            modal.style.display = "block";
+            modalImg.src = src;
+        }
+
+        function closeModal() {
+            document.getElementById("imageModal").style.display = "none";
+        }
     </script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Modal para imagen ampliada -->
+    <div id="imageModal" class="modal" onclick="closeModal()">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="modalImg">
+    </div>
+
+
 </body>
+
 </html>
